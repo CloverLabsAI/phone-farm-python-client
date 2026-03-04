@@ -9,7 +9,7 @@ from .errors import (
     SlotNotFoundError,
     TunnelNotAvailableError,
 )
-from .types import ReleaseSessionResponse
+from .types import ReleaseSessionResponse, SlotInfo
 
 __version__ = "0.1.0"
 
@@ -22,5 +22,6 @@ __all__ = [
     "DeviceOfflineError",
     "TunnelNotAvailableError",
     "ReleaseSessionResponse",
+    "SlotInfo",
     "__version__",
 ]

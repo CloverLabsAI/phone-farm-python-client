@@ -9,6 +9,8 @@ from ._generated.api.slots import (
     delete_slot as gen_delete_slot,
     create_session as gen_create_session,
     release_session as gen_release_session,
+    list_slots as gen_list_slots,
+    get_slot as gen_get_slot,
 )
 from ._generated.models.create_slot_body import CreateSlotBody
 from ._generated.types import Response as GenResponse
@@ -20,7 +22,7 @@ from .errors import (
     SlotNotFoundError,
     TunnelNotAvailableError,
 )
-from .types import ReleaseSessionResponse
+from .types import ReleaseSessionResponse, SlotInfo
 
 
 class PhoneFarmClient:
@@ -84,7 +86,57 @@ class PhoneFarmClient:
             status=parsed.status,
         )
 
+    def list_slots(
+        self,
+        *,
+        status: str | None = None,
+        cluster_id: str | None = None,
+        owner: str | None = None,
+    ) -> list[SlotInfo]:
+        """List all slots, optionally filtered by status/cluster/owner."""
+        result = gen_list_slots.sync_detailed(
+            client=self._client,
+            status=status,
+            cluster_id=cluster_id,
+            owner=owner,
+        )
+        self._check_error(result)
+        parsed = result.parsed  # type: ignore[union-attr]
+        return [self._slot_detail_to_info(s) for s in parsed.slots]
+
+    def get_slot(self, slot_id: str) -> SlotInfo:
+        """Get a single slot by ID."""
+        result = gen_get_slot.sync_detailed(slot_id, client=self._client)
+        self._check_error(result)
+        return self._slot_detail_to_info(result.parsed)  # type: ignore[arg-type]
+
+    def get_slot_status_counts(self) -> dict[str, int]:
+        """Get counts of slots by status. Returns {"available": N, "busy": N, "offline": N, "total": N}."""
+        slots = self.list_slots()
+        counts = {"available": 0, "busy": 0, "offline": 0, "total": len(slots)}
+        for slot in slots:
+            if slot.status in counts:
+                counts[slot.status] += 1
+        return counts
+
     # -- internal ----------------------------------------------------------
+
+    @staticmethod
+    def _slot_detail_to_info(detail: object) -> SlotInfo:
+        """Convert a generated SlotDetail to a public SlotInfo."""
+        return SlotInfo(
+            slot_id=detail.id,  # type: ignore[attr-defined]
+            device_serial=detail.phone_serial,  # type: ignore[attr-defined]
+            device_name=detail.phone_name or "",  # type: ignore[attr-defined]
+            status=detail.status,  # type: ignore[attr-defined]
+            cluster_id=detail.cluster_id,  # type: ignore[attr-defined]
+            cluster_name=detail.cluster_name,  # type: ignore[attr-defined]
+            owner=detail.owner,  # type: ignore[attr-defined]
+            has_active_session=detail.has_active_session,  # type: ignore[attr-defined]
+            tunnel_url=detail.tunnel_url,  # type: ignore[attr-defined]
+            created_at=detail.created_at,  # type: ignore[attr-defined]
+            updated_at=detail.updated_at,  # type: ignore[attr-defined]
+        )
 
     def _check_error(self, result: GenResponse) -> None:  # type: ignore[type-arg]
         status = result.status_code.value
