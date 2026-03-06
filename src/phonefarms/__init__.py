@@ -14,14 +14,14 @@ from .types import ReleaseSessionResponse, SlotInfo
 __version__ = "0.1.0"
 
 __all__ = [
-    "PhoneFarmClient",
-    "PhoneFarmError",
-    "NoPhonesAvailableError",
-    "SlotNotFoundError",
     "DeviceBusyError",
     "DeviceOfflineError",
-    "TunnelNotAvailableError",
+    "NoPhonesAvailableError",
+    "PhoneFarmClient",
+    "PhoneFarmError",
     "ReleaseSessionResponse",
     "SlotInfo",
+    "SlotNotFoundError",
+    "TunnelNotAvailableError",
     "__version__",
 ]

@@ -1,10 +1,14 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import TYPE_CHECKING, Any, TypeVar
+from typing import Any, TypeVar, BinaryIO, TextIO, TYPE_CHECKING, Generator
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
+
+from ..types import UNSET, Unset
+
+from typing import cast
 
 if TYPE_CHECKING:
     from ..models.slot_detail import SlotDetail
@@ -26,6 +30,8 @@ class ListSlotsResponse:
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
+        from ..models.slot_detail import SlotDetail
+
         slots = []
         for slots_item_data in self.slots:
             slots_item = slots_item_data.to_dict()

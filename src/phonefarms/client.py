@@ -2,18 +2,28 @@ from __future__ import annotations
 
 import json
 from http import HTTPStatus
+from typing import TYPE_CHECKING
 
-from ._generated.client import Client as GenClient
+from ._generated.api.slots import (
+    create_session as gen_create_session,
+)
 from ._generated.api.slots import (
     create_slot as gen_create_slot,
+)
+from ._generated.api.slots import (
     delete_slot as gen_delete_slot,
-    create_session as gen_create_session,
-    release_session as gen_release_session,
-    list_slots as gen_list_slots,
+)
+from ._generated.api.slots import (
     get_slot as gen_get_slot,
 )
+from ._generated.api.slots import (
+    list_slots as gen_list_slots,
+)
+from ._generated.api.slots import (
+    release_session as gen_release_session,
+)
+from ._generated.client import Client as GenClient
 from ._generated.models.create_slot_body import CreateSlotBody
-from ._generated.types import Response as GenResponse
 from .errors import (
     DeviceBusyError,
     DeviceOfflineError,
@@ -23,6 +33,9 @@ from .errors import (
     TunnelNotAvailableError,
 )
 from .types import ReleaseSessionResponse, SlotInfo
+
+if TYPE_CHECKING:
+    from ._generated.types import Response as GenResponse
 
 
 class PhoneFarmClient:
@@ -59,7 +72,11 @@ class PhoneFarmClient:
         owner: str | None = None,
     ) -> str:
         """Create a persistent slot (auto-assigns a device). Returns the slot ID."""
-        body = CreateSlotBody(cluster_id=cluster_id, owner=owner) if cluster_id is not None or owner is not None else None
+        body = (
+            CreateSlotBody(cluster_id=cluster_id, owner=owner)
+            if cluster_id is not None or owner is not None
+            else None
+        )
         result = gen_create_slot.sync_detailed(client=self._client, body=body)
         self._check_error(result)
         return result.parsed.slot_id  # type: ignore[union-attr]
@@ -81,9 +98,9 @@ class PhoneFarmClient:
         self._check_error(result)
         parsed = result.parsed  # type: ignore[union-attr]
         return ReleaseSessionResponse(
-            slot_id=parsed.slot_id,
-            session_id=parsed.session_id,
-            status=parsed.status,
+            slot_id=parsed.slot_id,  # type: ignore[union-attr]
+            session_id=parsed.session_id,  # type: ignore[union-attr]
+            status=parsed.status,  # type: ignore[union-attr]
         )
 
     def list_slots(
@@ -102,7 +119,7 @@ class PhoneFarmClient:
         )
         self._check_error(result)
         parsed = result.parsed  # type: ignore[union-attr]
-        return [self._slot_detail_to_info(s) for s in parsed.slots]
+        return [self._slot_detail_to_info(s) for s in parsed.slots]  # type: ignore[union-attr]
 
     def get_slot(self, slot_id: str) -> SlotInfo:
         """Get a single slot by ID."""
