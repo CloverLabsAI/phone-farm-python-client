@@ -32,7 +32,12 @@ from .errors import (
     SlotNotFoundError,
     TunnelNotAvailableError,
 )
-from .types import ReleaseSessionResponse, SlotInfo
+from .types import (
+    PreparationDefinition,
+    ReleaseSessionResponse,
+    SetupDefinition,
+    SlotInfo,
+)
 
 if TYPE_CHECKING:
     from ._generated.types import Response as GenResponse
@@ -67,16 +72,13 @@ class PhoneFarmClient:
 
     def create_slot(
         self,
+        setup: str,
         *,
         cluster_id: str | None = None,
         owner: str | None = None,
     ) -> str:
         """Create a persistent slot (auto-assigns a device). Returns the slot ID."""
-        body = (
-            CreateSlotBody(cluster_id=cluster_id, owner=owner)
-            if cluster_id is not None or owner is not None
-            else None
-        )
+        body = CreateSlotBody(setup=setup, cluster_id=cluster_id, owner=owner)
         result = gen_create_slot.sync_detailed(client=self._client, body=body)
         self._check_error(result)
         return result.parsed.slot_id  # type: ignore[union-attr]
@@ -136,7 +138,57 @@ class PhoneFarmClient:
                 counts[slot.status] += 1
         return counts
 
+    # -- setups & preparation ------------------------------------------------
+
+    def list_setups(self) -> list[SetupDefinition]:
+        """List all setup definitions."""
+        httpx_client = self._client.get_httpx_client()
+        response = httpx_client.get("/api/v1/setups")
+        response.raise_for_status()
+        data = response.json()
+        return [self._row_to_setup(s) for s in data.get("setups", [])]
+
+    def get_setup_by_name(self, name: str) -> SetupDefinition:
+        """Fetch a setup definition by name.
+
+        Raises SlotNotFoundError if no setup with the given name exists.
+        """
+        setups = self.list_setups()
+        for s in setups:
+            if s.name == name:
+                return s
+        raise SlotNotFoundError(f"Setup '{name}' not found")
+
+    def get_latest_preparation(self) -> PreparationDefinition | None:
+        """Fetch the latest preparation steps.
+
+        Returns None if no preparation steps are defined.
+        """
+        httpx_client = self._client.get_httpx_client()
+        response = httpx_client.get("/api/v1/preparation/latest")
+        if response.status_code == 404:
+            return None
+        response.raise_for_status()
+        data = response.json()
+        return PreparationDefinition(
+            id=data["id"],
+            pre_install_commands=data.get("pre_install_commands", []),
+            apps_installed=data.get("apps_installed", []),
+            post_install_commands=data.get("post_install_commands", []),
+        )
+
     # -- internal ----------------------------------------------------------
+
+    @staticmethod
+    def _row_to_setup(row: dict) -> SetupDefinition:
+        """Convert a raw API row to a SetupDefinition."""
+        return SetupDefinition(
+            id=row["id"],
+            name=row["name"],
+            apps_installed=row.get("apps_installed", []),
+            apk_urls=row.get("apk_urls", {}),
+            setup_commands=row.get("setup_commands", []),
+        )
 
     @staticmethod
     def _slot_detail_to_info(detail: object) -> SlotInfo:
@@ -146,6 +198,7 @@ class PhoneFarmClient:
             device_serial=detail.phone_serial,  # type: ignore[attr-defined]
             device_name=detail.phone_name or "",  # type: ignore[attr-defined]
             status=detail.status,  # type: ignore[attr-defined]
+            setup_name=detail.setup_name,  # type: ignore[attr-defined]
             cluster_id=detail.cluster_id,  # type: ignore[attr-defined]
             cluster_name=detail.cluster_name,  # type: ignore[attr-defined]
             owner=detail.owner,  # type: ignore[attr-defined]

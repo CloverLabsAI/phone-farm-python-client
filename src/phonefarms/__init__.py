@@ -9,7 +9,12 @@ from .errors import (
     SlotNotFoundError,
     TunnelNotAvailableError,
 )
-from .types import ReleaseSessionResponse, SlotInfo
+from .types import (
+    PreparationDefinition,
+    ReleaseSessionResponse,
+    SetupDefinition,
+    SlotInfo,
+)
 
 __version__ = "0.1.0"
 
@@ -19,7 +24,9 @@ __all__ = [
     "NoPhonesAvailableError",
     "PhoneFarmClient",
     "PhoneFarmError",
+    "PreparationDefinition",
     "ReleaseSessionResponse",
+    "SetupDefinition",
     "SlotInfo",
     "SlotNotFoundError",
     "TunnelNotAvailableError",

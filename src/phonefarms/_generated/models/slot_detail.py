@@ -24,6 +24,7 @@ class SlotDetail:
         phone_serial (str):
         phone_status (str):
         status (str):
+        setup_name (str):
         cluster_id (str):
         cluster_name (None | str):
         owner (str):
@@ -39,6 +40,7 @@ class SlotDetail:
     phone_serial: str
     phone_status: str
     status: str
+    setup_name: str
     cluster_id: str
     cluster_name: None | str
     owner: str
@@ -61,6 +63,8 @@ class SlotDetail:
         phone_status = self.phone_status
 
         status = self.status
+
+        setup_name = self.setup_name
 
         cluster_id = self.cluster_id
 
@@ -88,6 +92,7 @@ class SlotDetail:
                 "phone_serial": phone_serial,
                 "phone_status": phone_status,
                 "status": status,
+                "setup_name": setup_name,
                 "cluster_id": cluster_id,
                 "cluster_name": cluster_name,
                 "owner": owner,
@@ -120,6 +125,8 @@ class SlotDetail:
 
         status = d.pop("status")
 
+        setup_name = d.pop("setup_name")
+
         cluster_id = d.pop("cluster_id")
 
         def _parse_cluster_name(data: object) -> None | str:
@@ -151,6 +158,7 @@ class SlotDetail:
             phone_serial=phone_serial,
             phone_status=phone_status,
             status=status,
+            setup_name=setup_name,
             cluster_id=cluster_id,
             cluster_name=cluster_name,
             owner=owner,

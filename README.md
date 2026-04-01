@@ -4,6 +4,20 @@ Python SDK for the Echos Automation phone farm API. Single runtime dependency: `
 
 ## Install
 
+**With uv (recommended):**
+
+```bash
+uv add phonefarms --index-url https://cloverlabsai.github.io/phone-farm-python-client/simple/
+```
+
+**With pip:**
+
+```bash
+pip install phonefarms --index-url https://cloverlabsai.github.io/phone-farm-python-client/simple/
+```
+
+**From source:**
+
 ```bash
 pip install git+https://github.com/CloverLabsAI/phone-farm-python-client.git
 ```

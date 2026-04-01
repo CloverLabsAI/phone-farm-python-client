@@ -19,15 +19,19 @@ T = TypeVar("T", bound="CreateSlotBody")
 class CreateSlotBody:
     """
     Attributes:
+        setup (str):
         cluster_id (None | str | Unset):
         owner (None | str | Unset):
     """
 
+    setup: str
     cluster_id: None | str | Unset = UNSET
     owner: None | str | Unset = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
+        setup = self.setup
+
         cluster_id: None | str | Unset
         if isinstance(self.cluster_id, Unset):
             cluster_id = UNSET
@@ -42,7 +46,11 @@ class CreateSlotBody:
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
-        field_dict.update({})
+        field_dict.update(
+            {
+                "setup": setup,
+            }
+        )
         if cluster_id is not UNSET:
             field_dict["cluster_id"] = cluster_id
         if owner is not UNSET:
@@ -53,6 +61,7 @@ class CreateSlotBody:
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
         d = dict(src_dict)
+        setup = d.pop("setup")
 
         def _parse_cluster_id(data: object) -> None | str | Unset:
             if data is None:
@@ -73,6 +82,7 @@ class CreateSlotBody:
         owner = _parse_owner(d.pop("owner", UNSET))
 
         create_slot_body = cls(
+            setup=setup,
             cluster_id=cluster_id,
             owner=owner,
         )

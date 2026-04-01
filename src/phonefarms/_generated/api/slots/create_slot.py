@@ -11,13 +11,12 @@ from ... import errors
 from ...models.create_slot_body import CreateSlotBody
 from ...models.create_slot_response import CreateSlotResponse
 from ...models.http_validation_error import HTTPValidationError
-from ...types import UNSET, Unset
 from typing import cast
 
 
 def _get_kwargs(
     *,
-    body: CreateSlotBody | None | Unset = UNSET,
+    body: CreateSlotBody,
 ) -> dict[str, Any]:
     headers: dict[str, Any] = {}
 
@@ -26,10 +25,7 @@ def _get_kwargs(
         "url": "/api/v1/slots",
     }
 
-    if isinstance(body, CreateSlotBody):
-        _kwargs["json"] = body.to_dict()
-    else:
-        _kwargs["json"] = body
+    _kwargs["json"] = body.to_dict()
 
     headers["Content-Type"] = "application/json"
 
@@ -70,14 +66,14 @@ def _build_response(
 def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
-    body: CreateSlotBody | None | Unset = UNSET,
+    body: CreateSlotBody,
 ) -> Response[CreateSlotResponse | HTTPValidationError]:
     """Create Slot
 
      Auto-assign a device and create a persistent slot.
 
     Args:
-        body (CreateSlotBody | None | Unset):
+        body (CreateSlotBody):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -101,14 +97,14 @@ def sync_detailed(
 def sync(
     *,
     client: AuthenticatedClient | Client,
-    body: CreateSlotBody | None | Unset = UNSET,
+    body: CreateSlotBody,
 ) -> CreateSlotResponse | HTTPValidationError | None:
     """Create Slot
 
      Auto-assign a device and create a persistent slot.
 
     Args:
-        body (CreateSlotBody | None | Unset):
+        body (CreateSlotBody):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -127,14 +123,14 @@ def sync(
 async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
-    body: CreateSlotBody | None | Unset = UNSET,
+    body: CreateSlotBody,
 ) -> Response[CreateSlotResponse | HTTPValidationError]:
     """Create Slot
 
      Auto-assign a device and create a persistent slot.
 
     Args:
-        body (CreateSlotBody | None | Unset):
+        body (CreateSlotBody):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -156,14 +152,14 @@ async def asyncio_detailed(
 async def asyncio(
     *,
     client: AuthenticatedClient | Client,
-    body: CreateSlotBody | None | Unset = UNSET,
+    body: CreateSlotBody,
 ) -> CreateSlotResponse | HTTPValidationError | None:
     """Create Slot
 
      Auto-assign a device and create a persistent slot.
 
     Args:
-        body (CreateSlotBody | None | Unset):
+        body (CreateSlotBody):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

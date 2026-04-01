@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "phonefarms"
-version = "0.1.0"
+version = "0.1.0.dev1775075468"
 description = "Python SDK for the Echos Automation phone farm API"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -13,6 +13,9 @@ dependencies = [
     "httpx>=0.27.0",
     "attrs>=23.0.0",
 ]
+
+[tool.hatch.build.targets.sdist]
+exclude = [".turbo/"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/phonefarms"]
