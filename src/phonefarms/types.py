@@ -4,6 +4,15 @@ from dataclasses import dataclass
 
 
 @dataclass
+class ShellResult:
+    """Result of running a shell command on a device."""
+
+    exit_code: int
+    stdout: str
+    stderr: str
+
+
+@dataclass
 class ReleaseSessionResponse:
     slot_id: str
     session_id: str | None
