@@ -11,6 +11,11 @@ from ..types import UNSET, Unset
 from ..types import UNSET, Unset
 from typing import cast
 
+if TYPE_CHECKING:
+    from ..models.create_session_response_proxy_type_0 import (
+        CreateSessionResponseProxyType0,
+    )
+
 
 T = TypeVar("T", bound="CreateSessionResponse")
 
@@ -22,14 +27,20 @@ class CreateSessionResponse:
         session_id (str):
         phone_id (str):
         url (None | str | Unset):
+        proxy (CreateSessionResponseProxyType0 | None | Unset):
     """
 
     session_id: str
     phone_id: str
     url: None | str | Unset = UNSET
+    proxy: CreateSessionResponseProxyType0 | None | Unset = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
+        from ..models.create_session_response_proxy_type_0 import (
+            CreateSessionResponseProxyType0,
+        )
+
         session_id = self.session_id
 
         phone_id = self.phone_id
@@ -39,6 +50,14 @@ class CreateSessionResponse:
             url = UNSET
         else:
             url = self.url
+
+        proxy: dict[str, Any] | None | Unset
+        if isinstance(self.proxy, Unset):
+            proxy = UNSET
+        elif isinstance(self.proxy, CreateSessionResponseProxyType0):
+            proxy = self.proxy.to_dict()
+        else:
+            proxy = self.proxy
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -50,11 +69,17 @@ class CreateSessionResponse:
         )
         if url is not UNSET:
             field_dict["url"] = url
+        if proxy is not UNSET:
+            field_dict["proxy"] = proxy
 
         return field_dict
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
+        from ..models.create_session_response_proxy_type_0 import (
+            CreateSessionResponseProxyType0,
+        )
+
         d = dict(src_dict)
         session_id = d.pop("session_id")
 
@@ -69,10 +94,30 @@ class CreateSessionResponse:
 
         url = _parse_url(d.pop("url", UNSET))
 
+        def _parse_proxy(
+            data: object,
+        ) -> CreateSessionResponseProxyType0 | None | Unset:
+            if data is None:
+                return data
+            if isinstance(data, Unset):
+                return data
+            try:
+                if not isinstance(data, dict):
+                    raise TypeError()
+                proxy_type_0 = CreateSessionResponseProxyType0.from_dict(data)
+
+                return proxy_type_0
+            except (TypeError, ValueError, AttributeError, KeyError):
+                pass
+            return cast(CreateSessionResponseProxyType0 | None | Unset, data)
+
+        proxy = _parse_proxy(d.pop("proxy", UNSET))
+
         create_session_response = cls(
             session_id=session_id,
             phone_id=phone_id,
             url=url,
+            proxy=proxy,
         )
 
         create_session_response.additional_properties = d

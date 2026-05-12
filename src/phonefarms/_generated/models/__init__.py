@@ -1,6 +1,7 @@
 """Contains all the data models used in inputs/outputs"""
 
 from .create_session_response import CreateSessionResponse
+from .create_session_response_proxy_type_0 import CreateSessionResponseProxyType0
 from .create_slot_body import CreateSlotBody
 from .create_slot_response import CreateSlotResponse
 from .delete_slot_response import DeleteSlotResponse
@@ -13,6 +14,7 @@ from .validation_error_context import ValidationErrorContext
 
 __all__ = (
     "CreateSessionResponse",
+    "CreateSessionResponseProxyType0",
     "CreateSlotBody",
     "CreateSlotResponse",
     "DeleteSlotResponse",
