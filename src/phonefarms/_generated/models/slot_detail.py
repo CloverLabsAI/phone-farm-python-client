@@ -29,7 +29,6 @@ class SlotDetail:
         cluster_name (None | str):
         owner (str):
         has_active_session (bool):
-        tunnel_url (None | str):
         created_at (str):
         updated_at (str):
     """
@@ -45,7 +44,6 @@ class SlotDetail:
     cluster_name: None | str
     owner: str
     has_active_session: bool
-    tunnel_url: None | str
     created_at: str
     updated_at: str
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
@@ -75,9 +73,6 @@ class SlotDetail:
 
         has_active_session = self.has_active_session
 
-        tunnel_url: None | str
-        tunnel_url = self.tunnel_url
-
         created_at = self.created_at
 
         updated_at = self.updated_at
@@ -97,7 +92,6 @@ class SlotDetail:
                 "cluster_name": cluster_name,
                 "owner": owner,
                 "has_active_session": has_active_session,
-                "tunnel_url": tunnel_url,
                 "created_at": created_at,
                 "updated_at": updated_at,
             }
@@ -140,13 +134,6 @@ class SlotDetail:
 
         has_active_session = d.pop("has_active_session")
 
-        def _parse_tunnel_url(data: object) -> None | str:
-            if data is None:
-                return data
-            return cast(None | str, data)
-
-        tunnel_url = _parse_tunnel_url(d.pop("tunnel_url"))
-
         created_at = d.pop("created_at")
 
         updated_at = d.pop("updated_at")
@@ -163,7 +150,6 @@ class SlotDetail:
             cluster_name=cluster_name,
             owner=owner,
             has_active_session=has_active_session,
-            tunnel_url=tunnel_url,
             created_at=created_at,
             updated_at=updated_at,
         )

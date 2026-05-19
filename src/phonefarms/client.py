@@ -385,7 +385,6 @@ class PhoneFarmClient:
             cluster_name=detail.cluster_name,  # type: ignore[attr-defined]
             owner=detail.owner,  # type: ignore[attr-defined]
             has_active_session=detail.has_active_session,  # type: ignore[attr-defined]
-            tunnel_url=detail.tunnel_url,  # type: ignore[attr-defined]
             created_at=detail.created_at,  # type: ignore[attr-defined]
             updated_at=detail.updated_at,  # type: ignore[attr-defined]
         )

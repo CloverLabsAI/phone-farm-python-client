@@ -26,13 +26,11 @@ class CreateSessionResponse:
     Attributes:
         session_id (str):
         phone_id (str):
-        url (None | str | Unset):
         proxy (CreateSessionResponseProxyType0 | None | Unset):
     """
 
     session_id: str
     phone_id: str
-    url: None | str | Unset = UNSET
     proxy: CreateSessionResponseProxyType0 | None | Unset = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
@@ -44,12 +42,6 @@ class CreateSessionResponse:
         session_id = self.session_id
 
         phone_id = self.phone_id
-
-        url: None | str | Unset
-        if isinstance(self.url, Unset):
-            url = UNSET
-        else:
-            url = self.url
 
         proxy: dict[str, Any] | None | Unset
         if isinstance(self.proxy, Unset):
@@ -67,8 +59,6 @@ class CreateSessionResponse:
                 "phone_id": phone_id,
             }
         )
-        if url is not UNSET:
-            field_dict["url"] = url
         if proxy is not UNSET:
             field_dict["proxy"] = proxy
 
@@ -84,15 +74,6 @@ class CreateSessionResponse:
         session_id = d.pop("session_id")
 
         phone_id = d.pop("phone_id")
-
-        def _parse_url(data: object) -> None | str | Unset:
-            if data is None:
-                return data
-            if isinstance(data, Unset):
-                return data
-            return cast(None | str | Unset, data)
-
-        url = _parse_url(d.pop("url", UNSET))
 
         def _parse_proxy(
             data: object,
@@ -116,7 +97,6 @@ class CreateSessionResponse:
         create_session_response = cls(
             session_id=session_id,
             phone_id=phone_id,
-            url=url,
             proxy=proxy,
         )
 
