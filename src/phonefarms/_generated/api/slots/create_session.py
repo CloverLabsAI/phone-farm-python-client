@@ -64,7 +64,7 @@ def sync_detailed(
 ) -> Response[CreateSessionResponse | HTTPValidationError]:
     """Create Session
 
-     Create an active session for a slot and return tunnel URL.
+     Create an active session for a slot and return session metadata.
 
     Args:
         slot_id (str):
@@ -95,7 +95,7 @@ def sync(
 ) -> CreateSessionResponse | HTTPValidationError | None:
     """Create Session
 
-     Create an active session for a slot and return tunnel URL.
+     Create an active session for a slot and return session metadata.
 
     Args:
         slot_id (str):
@@ -121,7 +121,7 @@ async def asyncio_detailed(
 ) -> Response[CreateSessionResponse | HTTPValidationError]:
     """Create Session
 
-     Create an active session for a slot and return tunnel URL.
+     Create an active session for a slot and return session metadata.
 
     Args:
         slot_id (str):
@@ -150,7 +150,7 @@ async def asyncio(
 ) -> CreateSessionResponse | HTTPValidationError | None:
     """Create Session
 
-     Create an active session for a slot and return tunnel URL.
+     Create an active session for a slot and return session metadata.
 
     Args:
         slot_id (str):

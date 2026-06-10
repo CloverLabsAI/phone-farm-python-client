@@ -29,12 +29,12 @@ from phonefarms import PhoneFarmClient
 
 with PhoneFarmClient("https://farm.echos.social", "your-api-key") as client:
     # 1. Create a slot (auto-assigns an available device)
-    slot_id = client.create_slot()
+    slot_id = client.create_slot("default")
 
-    # 2. Start a session (locks the device, returns tunnel URL)
-    tunnel_url = client.create_session(slot_id)
+    # 2. Start a session (locks the device, returns a local ADB bridge)
+    adb_address = client.create_session(slot_id)
 
-    # 3. Use the device via tunnel_url ...
+    # 3. Use the device via the returned localhost:port ADB address ...
 
     # 4. Release the session when done (unlocks the device)
     client.release_session(slot_id)
@@ -54,12 +54,13 @@ with PhoneFarmClient("https://farm.echos.social", "your-api-key") as client:
 
 Supports use as a context manager (`with` statement) for automatic cleanup.
 
-### `client.create_slot(*, cluster_id?, owner?) -> str`
+### `client.create_slot(setup, *, cluster_id?, owner?) -> str`
 
 Auto-assigns an available online device and creates a persistent slot. Returns the slot ID.
 
 | Parameter    | Type          | Description                                  |
 | ------------ | ------------- | -------------------------------------------- |
+| `setup`      | `str`         | Setup template to assign                     |
 | `cluster_id` | `str \| None` | Optional. Restrict to a specific cluster     |
 | `owner`      | `str \| None` | Optional. Slot owner label (default: `"api"`) |
 
@@ -73,13 +74,13 @@ Deletes a slot. Automatically releases any active session on it first.
 
 ### `client.create_session(slot_id) -> str`
 
-Starts an active session for a slot, locking the assigned device. Returns the tunnel URL for device access. Only one active session is allowed per device at a time.
+Starts an active session for a slot, locking the assigned device. Starts a local TCP-to-WebSocket bridge and returns a `localhost:<port>` address usable with ADB. Only one active session is allowed per device at a time.
 
 **Raises:**
 - `SlotNotFoundError` — slot does not exist
 - `DeviceOfflineError` — assigned device is offline
 - `DeviceBusyError` — device already has an active session
-- `TunnelNotAvailableError` — device has no tunnel URL configured
+- `PhoneFarmError` — session proxy or another server-side dependency is unavailable
 
 ### `client.release_session(slot_id) -> ReleaseSessionResponse`
 
@@ -109,11 +110,10 @@ from phonefarms import (
     SlotNotFoundError,
     DeviceBusyError,
     DeviceOfflineError,
-    TunnelNotAvailableError,
 )
 
 try:
-    url = client.create_session(slot_id)
+    adb_address = client.create_session(slot_id)
 except DeviceBusyError:
     # retry later
     pass
@@ -128,5 +128,5 @@ except DeviceOfflineError:
 | `SlotNotFoundError`        | 404         | Slot ID does not exist                  |
 | `DeviceBusyError`          | 409         | Device already has an active session    |
 | `DeviceOfflineError`       | 409         | Assigned device is offline              |
-| `TunnelNotAvailableError`  | 503         | Device has no tunnel URL                |
+| `TunnelNotAvailableError`  | 503         | Legacy tunnel endpoint is unavailable   |
 | `PhoneFarmError`           | any         | Base class for all other API errors     |
